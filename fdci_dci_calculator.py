@@ -41,9 +41,11 @@ def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement
 # Function to plot the graph
 def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
     plt.figure(figsize=(14,8))
-    if plot_type == 'FDCI':
+
+    # Plot based on user's choice: FDCI, DCI, or both
+    if plot_type == 'FDCI' or plot_type == 'Both':
         plt.plot(phases, fdci_values, label="FDCI", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
-    elif plot_type == 'DCI':
+    if plot_type == 'DCI' or plot_type == 'Both':
         plt.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
 
     plt.xlabel('Phase', fontsize=14)
@@ -65,6 +67,7 @@ def start_calculation():
         years = [int(entry_year[i].get()) for i in range(num_phases)]
         cpis = [float(entry_cpi[i].get()) for i in range(num_phases)]
         inflation_adjustment = var_inflation.get()
+        steel_requirement = float(entry_steel_requirement.get())  # Get user-defined steel requirement
 
         # Call the function to calculate FDCI and DCI
         fdci_values, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment)
@@ -86,6 +89,7 @@ def start_calculation():
 def reset_inputs():
     # Clear all input fields
     entry_num_phases.delete(0, tk.END)
+    entry_steel_requirement.delete(0, tk.END)
     for i in range(int(entry_num_phases.get())):
         entry_steel_price[i].delete(0, tk.END)
         entry_reuse_factor[i].delete(0, tk.END)
@@ -131,10 +135,10 @@ def create_phase_inputs():
     submit_button = tk.Button(root, text="Start Calculation", command=start_calculation)
     submit_button.grid(row=num_phases+1, column=0, columnspan=2, pady=10)
 
-    # ComboBox for selecting plot type (FDCI or DCI)
+    # ComboBox for selecting plot type (FDCI or DCI or Both)
     tk.Label(root, text="Select Plot Type:").grid(row=num_phases+2, column=0, pady=5)
     global combo_plot_type
-    combo_plot_type = ttk.Combobox(root, values=["FDCI", "DCI"])
+    combo_plot_type = ttk.Combobox(root, values=["FDCI", "DCI", "Both"])
     combo_plot_type.grid(row=num_phases+2, column=1)
 
     # Checkbox for inflation adjustment
@@ -143,9 +147,15 @@ def create_phase_inputs():
     inflation_checkbox = tk.Checkbutton(root, text="Adjust for Inflation", variable=var_inflation)
     inflation_checkbox.grid(row=num_phases+3, column=0, columnspan=2)
 
+    # Entry for steel requirement
+    tk.Label(root, text="Steel Requirement (tons per phase):").grid(row=num_phases+4, column=0, pady=5)
+    global entry_steel_requirement
+    entry_steel_requirement = tk.Entry(root)
+    entry_steel_requirement.grid(row=num_phases+4, column=1, pady=5)
+
     # Reset button to clear inputs
     reset_button = tk.Button(root, text="Reset", command=reset_inputs, state=tk.DISABLED)
-    reset_button.grid(row=num_phases+4, column=0, columnspan=2, pady=10)
+    reset_button.grid(row=num_phases+5, column=0, columnspan=2, pady=10)
 
 # Create the input fields for number of phases
 tk.Label(root, text="Number of Phases:").grid(row=0, column=0, pady=5)
