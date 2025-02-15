@@ -98,18 +98,17 @@ def reset_inputs():
 root = tk.Tk()
 root.title("FDCI and DCI Calculator")
 
-# Create and place widgets in the window
-tk.Label(root, text="Number of Phases:").grid(row=0, column=0, pady=5)
-entry_num_phases = tk.Entry(root)
-entry_num_phases.grid(row=0, column=1, pady=5)
+# Function to create input fields dynamically based on number of phases
+def create_phase_inputs():
+    num_phases = int(entry_num_phases.get())  # Get number of phases from the user input
 
-# Create dynamic input fields for steel prices, reuse factors, years, and CPI
-entry_steel_price = []
-entry_reuse_factor = []
-entry_year = []
-entry_cpi = []
-
-def create_phase_inputs(num_phases):
+    # Create dynamic input fields for steel prices, reuse factors, years, and CPI
+    global entry_steel_price, entry_reuse_factor, entry_year, entry_cpi
+    entry_steel_price = []
+    entry_reuse_factor = []
+    entry_year = []
+    entry_cpi = []
+    
     for i in range(num_phases):
         tk.Label(root, text=f"Phase {i+1} Steel Price:").grid(row=i+1, column=0)
         entry_steel_price.append(tk.Entry(root))
@@ -127,23 +126,32 @@ def create_phase_inputs(num_phases):
         entry_cpi.append(tk.Entry(root))
         entry_cpi[i].grid(row=i+1, column=7, pady=5)
 
-# Submit button to start calculations
-submit_button = tk.Button(root, text="Start Calculation", command=start_calculation)
-submit_button.grid(row=num_phases+1, column=0, columnspan=2, pady=10)
+    # Submit button to start calculations
+    submit_button = tk.Button(root, text="Start Calculation", command=start_calculation)
+    submit_button.grid(row=num_phases+1, column=0, columnspan=2, pady=10)
 
-# ComboBox for selecting plot type (FDCI or DCI)
-tk.Label(root, text="Select Plot Type:").grid(row=num_phases+2, column=0, pady=5)
-combo_plot_type = tk.Combobox(root, values=["FDCI", "DCI"])
-combo_plot_type.grid(row=num_phases+2, column=1)
+    # ComboBox for selecting plot type (FDCI or DCI)
+    tk.Label(root, text="Select Plot Type:").grid(row=num_phases+2, column=0, pady=5)
+    combo_plot_type = tk.Combobox(root, values=["FDCI", "DCI"])
+    combo_plot_type.grid(row=num_phases+2, column=1)
 
-# Checkbox for inflation adjustment
-var_inflation = tk.BooleanVar()
-inflation_checkbox = tk.Checkbutton(root, text="Adjust for Inflation", variable=var_inflation)
-inflation_checkbox.grid(row=num_phases+3, column=0, columnspan=2)
+    # Checkbox for inflation adjustment
+    var_inflation = tk.BooleanVar()
+    inflation_checkbox = tk.Checkbutton(root, text="Adjust for Inflation", variable=var_inflation)
+    inflation_checkbox.grid(row=num_phases+3, column=0, columnspan=2)
 
-# Reset button to clear inputs
-reset_button = tk.Button(root, text="Reset", command=reset_inputs, state=tk.DISABLED)
-reset_button.grid(row=num_phases+4, column=0, columnspan=2, pady=10)
+    # Reset button to clear inputs
+    reset_button = tk.Button(root, text="Reset", command=reset_inputs, state=tk.DISABLED)
+    reset_button.grid(row=num_phases+4, column=0, columnspan=2, pady=10)
+
+# Create the input fields for number of phases
+tk.Label(root, text="Number of Phases:").grid(row=0, column=0, pady=5)
+entry_num_phases = tk.Entry(root)
+entry_num_phases.grid(row=0, column=1, pady=5)
+
+# Button to generate input fields for the phases
+generate_button = tk.Button(root, text="Generate Phase Inputs", command=create_phase_inputs)
+generate_button.grid(row=1, column=0, columnspan=2, pady=10)
 
 # Start the Tkinter event loop
 root.mainloop()
