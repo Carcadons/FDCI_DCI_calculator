@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import messagebox
 
 # Function to calculate FDCI and DCI for each phase
 def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment=False):
@@ -35,7 +37,7 @@ def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement
 
     return fdci_values, dci_values
 
-# Function to plot the FDCI or DCI graph
+# Function to plot the graph
 def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
     plt.figure(figsize=(14,8))
     if plot_type == 'FDCI':
@@ -52,42 +54,96 @@ def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
     plt.tight_layout()
     plt.show()
 
-# User input for the number of phases and parameters
-num_phases = int(input("Enter the number of phases: "))
-steel_prices = []
-reuse_factors = []
-years = []
-cpis = []
+# GUI function to start calculations
+def start_calculation():
+    try:
+        # Gather input from the user
+        num_phases = int(entry_num_phases.get())
+        steel_prices = [float(entry_steel_price[i].get()) for i in range(num_phases)]
+        reuse_factors = [float(entry_reuse_factor[i].get()) for i in range(num_phases)]
+        years = [int(entry_year[i].get()) for i in range(num_phases)]
+        cpis = [float(entry_cpi[i].get()) for i in range(num_phases)]
+        inflation_adjustment = var_inflation.get()
 
-# Collecting user input for steel prices, reuse factors, years, and CPI for each phase
-for i in range(num_phases):
-    price = float(input(f"Enter the steel price for phase {i+1} in USD per ton: "))
-    reuse = float(input(f"Enter the reuse factor for phase {i+1} (between 0 and 1): "))
-    year = int(input(f"Enter the year for phase {i+1}: "))
-    cpi = float(input(f"Enter the CPI for the year {year} for phase {i+1}: "))
-    
-    steel_prices.append(price)
-    reuse_factors.append(reuse)
-    years.append(year)
-    cpis.append(cpi)
+        # Call the function to calculate FDCI and DCI
+        fdci_values, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment)
 
-steel_requirement = 1000  # Fixed steel requirement per phase
+        # Display the results
+        messagebox.showinfo("Calculation Completed", "Calculation complete! Click 'Plot' to view the graph.")
 
-# Optional inflation adjustment
-inflation_adjustment = input("Would you like to adjust for inflation? (y/n): ").lower() == 'y'
+        # Plot the graph
+        plot_type = combo_plot_type.get()
+        plot_graph(years, fdci_values, dci_values, plot_type)
 
-# Call the calculation function
-fdci_values, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment)
+        # Enable the reset button after the calculation is completed
+        reset_button.config(state=tk.NORMAL)
 
-# Display results
-print("\nFDCI values per phase:")
-for i, fdci in enumerate(fdci_values):
-    print(f"Phase {i+1}: FDCI = {fdci:.4f}")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Please ensure all inputs are correct.")
 
-print("\nDCI values per phase:")
-for i, dci in enumerate(dci_values):
-    print(f"Phase {i+1}: DCI = {dci:.4f}")
+# GUI function to reset inputs
+def reset_inputs():
+    # Clear all input fields
+    entry_num_phases.delete(0, tk.END)
+    for i in range(int(entry_num_phases.get())):
+        entry_steel_price[i].delete(0, tk.END)
+        entry_reuse_factor[i].delete(0, tk.END)
+        entry_year[i].delete(0, tk.END)
+        entry_cpi[i].delete(0, tk.END)
 
-# Ask the user which graph to plot (FDCI or DCI)
-plot_type = input("Which graph would you like to plot? (FDCI or DCI): ").upper()
-plot_graph(years, fdci_values, dci_values, plot_type)
+    # Disable the reset button after resetting
+    reset_button.config(state=tk.DISABLED)
+
+# Create the main window
+root = tk.Tk()
+root.title("FDCI and DCI Calculator")
+
+# Create and place widgets in the window
+tk.Label(root, text="Number of Phases:").grid(row=0, column=0, pady=5)
+entry_num_phases = tk.Entry(root)
+entry_num_phases.grid(row=0, column=1, pady=5)
+
+# Create dynamic input fields for steel prices, reuse factors, years, and CPI
+entry_steel_price = []
+entry_reuse_factor = []
+entry_year = []
+entry_cpi = []
+
+def create_phase_inputs(num_phases):
+    for i in range(num_phases):
+        tk.Label(root, text=f"Phase {i+1} Steel Price:").grid(row=i+1, column=0)
+        entry_steel_price.append(tk.Entry(root))
+        entry_steel_price[i].grid(row=i+1, column=1, pady=5)
+
+        tk.Label(root, text=f"Phase {i+1} Reuse Factor:").grid(row=i+1, column=2)
+        entry_reuse_factor.append(tk.Entry(root))
+        entry_reuse_factor[i].grid(row=i+1, column=3, pady=5)
+
+        tk.Label(root, text=f"Phase {i+1} Year:").grid(row=i+1, column=4)
+        entry_year.append(tk.Entry(root))
+        entry_year[i].grid(row=i+1, column=5, pady=5)
+
+        tk.Label(root, text=f"Phase {i+1} CPI:").grid(row=i+1, column=6)
+        entry_cpi.append(tk.Entry(root))
+        entry_cpi[i].grid(row=i+1, column=7, pady=5)
+
+# Submit button to start calculations
+submit_button = tk.Button(root, text="Start Calculation", command=start_calculation)
+submit_button.grid(row=num_phases+1, column=0, columnspan=2, pady=10)
+
+# ComboBox for selecting plot type (FDCI or DCI)
+tk.Label(root, text="Select Plot Type:").grid(row=num_phases+2, column=0, pady=5)
+combo_plot_type = tk.Combobox(root, values=["FDCI", "DCI"])
+combo_plot_type.grid(row=num_phases+2, column=1)
+
+# Checkbox for inflation adjustment
+var_inflation = tk.BooleanVar()
+inflation_checkbox = tk.Checkbutton(root, text="Adjust for Inflation", variable=var_inflation)
+inflation_checkbox.grid(row=num_phases+3, column=0, columnspan=2)
+
+# Reset button to clear inputs
+reset_button = tk.Button(root, text="Reset", command=reset_inputs, state=tk.DISABLED)
+reset_button.grid(row=num_phases+4, column=0, columnspan=2, pady=10)
+
+# Start the Tkinter event loop
+root.mainloop()
