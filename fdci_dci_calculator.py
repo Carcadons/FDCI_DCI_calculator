@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk  # Import ttk for Combobox
 
 # Function to calculate FDCI and DCI for each phase
 def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment=False):
@@ -132,10 +133,12 @@ def create_phase_inputs():
 
     # ComboBox for selecting plot type (FDCI or DCI)
     tk.Label(root, text="Select Plot Type:").grid(row=num_phases+2, column=0, pady=5)
-    combo_plot_type = tk.Combobox(root, values=["FDCI", "DCI"])
+    global combo_plot_type
+    combo_plot_type = ttk.Combobox(root, values=["FDCI", "DCI"])
     combo_plot_type.grid(row=num_phases+2, column=1)
 
     # Checkbox for inflation adjustment
+    global var_inflation
     var_inflation = tk.BooleanVar()
     inflation_checkbox = tk.Checkbutton(root, text="Adjust for Inflation", variable=var_inflation)
     inflation_checkbox.grid(row=num_phases+3, column=0, columnspan=2)
