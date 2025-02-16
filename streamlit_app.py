@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
-from calculations import calculate_indices, calculate_material_costs
+from calculations import material_required, reused_material, calculate_indices, calculate_material_costs
 from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
 
 # Function to display the results table in Streamlit
