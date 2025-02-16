@@ -1,3 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import streamlit as st  # Ensure Streamlit is imported
+import pandas as pd  # Import pandas with the alias 'pd'
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io  # For saving the plot as a buffer
+
 cpi_database = {
     1900: 8.4, 1901: 8.5, 1902: 8.3, 1903: 8.5, 1904: 8.6, 1905: 8.7,
     1906: 8.9, 1907: 9.1, 1908: 9.2, 1909: 9.4, 1910: 9.6, 1911: 9.8,
