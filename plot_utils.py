@@ -28,7 +28,7 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
     
     # Plot DCI
     fig2, ax2 = plt.subplots(figsize=(10, 6))
-    ax2.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
+    ax2.plot(phases, dci_values, label="DCI", marker='o', linestyle='--', color='red', linewidth=2, markersize=8)
     ax2.set_xlabel('Phase', fontsize=12)
     ax2.set_ylabel('DCI', fontsize=12)
     ax2.set_title('DCI Across Phases', fontsize=14)
@@ -39,7 +39,7 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
     fig3, ax3 = plt.subplots(figsize=(10, 6))
     ax3.plot(phases, fdci_values_no_inflation, label="FDCI (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
     ax3.plot(phases, fdci_values_with_inflation, label="FDCI (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
-    ax3.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
+    ax3.plot(phases, dci_values, label="DCI", marker='o', linestyle='--', color='red', linewidth=2, markersize=8)
     ax3.set_xlabel('Phase', fontsize=12)
     ax3.set_ylabel('Value', fontsize=12)
     ax3.set_title('FDCI and DCI Comparison', fontsize=14)
@@ -56,15 +56,15 @@ def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inf
     fig, ax1 = plt.subplots(figsize=(10, 6))
 
     # Plot FDCI values (No Inflation and With Inflation)
-    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue')
-    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Inflation Adjustment)", marker='o', linestyle='--', color='green')
+    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Inflation Adjustment)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
     ax1.set_xlabel('Phase')
     ax1.set_ylabel('FDCI', color='blue')
     ax1.tick_params(axis='y', labelcolor='blue')
 
     # Create a second y-axis for the inverted DCI
     ax2 = ax1.twinx()
-    ax2.plot(phases, inverted_dci_values, label="Inverted DCI", marker='o', linestyle='-', color='red')
+    ax2.plot(phases, inverted_dci_values, label="Inverted DCI", marker='o', linestyle='--', color='red', linewidth=2, markersize=8)
     ax2.set_ylabel('Inverted DCI', color='red')
     ax2.tick_params(axis='y', labelcolor='red')
 
