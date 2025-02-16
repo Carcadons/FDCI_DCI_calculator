@@ -73,6 +73,18 @@ def app():
     st.write("### Recap Table: CPI and Material Prices for Each Phase")
     st.write(recap_df)
 
+    # Plot the formulas (using LaTeX)
+    st.write("### Formulas Used in the Calculations:")
+    
+    # FDCI Formula (No Inflation Adjustment)
+    st.latex(r"\text{FDCI (No Inflation Adjustment)} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \text{Cost}}")
+    
+    # FDCI Formula (With Inflation Adjustment)
+    st.latex(r"\text{FDCI (With Inflation Adjustment)} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \left(\text{Cost} \times \frac{\text{Current CPI}}{\text{Past CPI}}\right)}")
+    
+    # DCI Formula
+    st.latex(r"\text{DCI} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \text{Cost}}")
+
     # Gather other inputs for the material requirements and reuse factors
     material_requirement = [st.number_input(f"Enter initial quantity of {material_type} for Phase 1 (tons)", min_value=1, value=1000)]
     reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
