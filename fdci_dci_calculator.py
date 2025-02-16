@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
+import pandas as pd  # Import pandas with the alias 'pd'
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 # Function to calculate FDCI and DCI for each phase
@@ -37,7 +38,7 @@ def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement
 
     return fdci_values, dci_values
 
-# Function to plot the graph inside Streamlit
+# Function to plot the graph inside the Tkinter interface
 def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
     fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -79,7 +80,8 @@ def app():
     for i in range(num_phases):
         steel_prices.append(st.number_input(f"Phase {i+1} - Steel Price (USD per ton)", min_value=0.0, value=500.0))
         reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
-        years.append(st.number_input(f"Phase {i+1} - Year", min_value=2000, max_value=2100, value=2022))
+        # Remove the restriction on the year input
+        years.append(st.number_input(f"Phase {i+1} - Year", min_value=1, value=2022))  # No lower bound for the year
         cpis.append(st.number_input(f"Phase {i+1} - CPI", min_value=0.0, value=100.0))
 
     steel_requirement = st.number_input("Enter steel requirement (tons per phase)", min_value=1, value=1000)
