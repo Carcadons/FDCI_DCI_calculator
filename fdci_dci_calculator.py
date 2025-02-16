@@ -5,37 +5,40 @@ import pandas as pd  # Import pandas with the alias 'pd'
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 # Function to calculate FDCI and DCI for each phase
-def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years):
+def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirements, cpis, years):
     fdci_values_no_inflation = []
     fdci_values_with_inflation = []
     dci_values = []
-    mass_remaining = steel_requirement
+    steel_from_previous = steel_requirements[0]  # Initial steel quantity for Phase 1
     
     for i in range(num_phases):
         # User-defined steel price, reuse factor, CPI, and year for each phase
         cost = steel_prices[i]
         reuse_factor = reuse_factors[i]
+        steel_required = steel_requirements[i]
         current_cpi = cpis[i]
         current_year = years[i]
         
+        # Calculate steel reuse and procurement from market for each phase
+        reused_steel = steel_from_previous * reuse_factor / 100
+        procured_steel = steel_required - reused_steel
+        
         # FDCI Calculation without inflation
-        steel_from_previous = mass_remaining * reuse_factor
-        steel_from_market = mass_remaining - steel_from_previous
-        fdci_no_inflation = (steel_from_previous * reuse_factor) / (steel_from_previous + steel_from_market * cost)
+        fdci_no_inflation = reused_steel / (reused_steel + procured_steel * cost)
         fdci_values_no_inflation.append(fdci_no_inflation)
         
         # FDCI Calculation with inflation adjustment
         past_cpi = cpis[0]  # Use the CPI of the first phase (base year)
         adjusted_cost = cost * (current_cpi / past_cpi)
-        fdci_with_inflation = (steel_from_previous * reuse_factor) / (steel_from_previous + steel_from_market * adjusted_cost)
+        fdci_with_inflation = reused_steel / (reused_steel + procured_steel * adjusted_cost)
         fdci_values_with_inflation.append(fdci_with_inflation)
         
         # DCI Calculation
-        dci = (steel_from_previous * reuse_factor) / (steel_from_previous + steel_from_market * cost)
+        dci = reused_steel / (reused_steel + procured_steel * cost)
         dci_values.append(dci)
         
         # Update mass for the next phase (steel used from previous phase)
-        mass_remaining = steel_from_previous
+        steel_from_previous = reused_steel
 
     return fdci_values_no_inflation, fdci_values_with_inflation, dci_values
 
@@ -89,13 +92,18 @@ def app():
 
     num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
     
-    # New field to ask the user for the initial steel quantity (tons)
-    steel_requirement = st.number_input("Enter initial quantity of steel (tons)", min_value=1, value=1000)
+    # New field to ask the user for the initial steel quantity (tons) for Phase 1
+    steel_requirement = []
+    steel_requirement.append(st.number_input("Enter initial quantity of steel for Phase 1 (tons)", min_value=1, value=1000))
 
     steel_prices = []
     reuse_factors = []
     years = []
     cpis = []
+
+    # Gather steel requirements for each phase, starting with Phase 1
+    for i in range(1, num_phases):
+        steel_requirement.append(st.number_input(f"Phase {i+1} - Steel Requirement (tons)", min_value=1, value=1000))
 
     for i in range(num_phases):
         steel_prices.append(st.number_input(f"Phase {i+1} - Steel Price (USD per ton)", min_value=0.0, value=500.0))
