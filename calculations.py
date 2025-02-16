@@ -31,7 +31,7 @@ def calculate_indices(num_phases, material_prices, reuse_factors, material_requi
         
         material_from_previous = reused_material
 
-    return fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_required
+    return fdci_values_no_inflation, fdci_values_with_inflation, dci_values
 
 def calculate_material_costs(material_prices, cpis, num_phases):
     inflation_adjusted_costs = []
