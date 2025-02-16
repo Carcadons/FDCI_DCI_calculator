@@ -3,7 +3,7 @@ import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices, calculate_material_costs
-from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
+from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer, display_table
 
 # Function to display the results table in Streamlit
 def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
@@ -107,10 +107,18 @@ def app():
         for i in range(num_phases):
             reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
 
-    # Gather material requirements (initial quantity of material for each phase)
-    material_requirement = [st.number_input(f"Enter initial quantity of {material_type} for Phase 1 (tons)", min_value=1, value=1000)]
-    for i in range(1, num_phases):
-        material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
+    # Ask the user if they want to fix the material quantity for all phases
+    fix_material_quantity = st.checkbox("Fix the Material Quantity for All Phases")
+
+    if fix_material_quantity:
+        # Input for material quantity once
+        material_quantity = st.number_input(f"Enter the Material Quantity (tons) for All Phases", min_value=1, value=1000)
+        material_requirement = [material_quantity] * num_phases  # Apply the same quantity for all phases
+    else:
+        # Allow the user to input different material quantities for each phase
+        material_requirement = []
+        for i in range(num_phases):
+            material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
