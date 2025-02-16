@@ -138,7 +138,7 @@ def app():
         inflation_adjusted_costs, non_inflation_adjusted_costs = calculate_material_costs(material_prices, cpis, num_phases)
         
         # Display results in table
-        display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
+        display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirements, reuse_factors)
         
         # Plot the graphs
         fig1, fig2, fig3 = plot_graphs(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
