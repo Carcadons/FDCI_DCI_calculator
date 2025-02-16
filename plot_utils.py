@@ -69,7 +69,7 @@ def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inf
     ax2.tick_params(axis='y', labelcolor='red')
 
     # Add title and legend
-    plt.title('Comparison of FDCI and Inverted DCI')
+    plt.title('Comparison of FDCI and Inverted DCI', fontsize=14)
     fig.tight_layout()  # Adjust layout to prevent overlap
 
     # Show legend
