@@ -1,10 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import streamlit as st
+import streamlit as st  # Make sure Streamlit is imported
 import pandas as pd
 import json  # For reading the JSON file
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import io  # For saving the plot as a buffer
+
+# Function to display the results in a table
+def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
+    data = {
+        "Year": years,
+        "FDCI (No Inflation Adjustment)": fdci_values_no_inflation,
+        "FDCI (With Inflation Adjustment)": fdci_values_with_inflation,
+        "DCI": dci_values
+    }
+    df = pd.DataFrame(data)
+    st.write(df)
 
 # Function to load CPI data from an external JSON file
 def load_cpi_data():
