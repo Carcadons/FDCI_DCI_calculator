@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 import io
 
 def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
