@@ -124,23 +124,23 @@ def app():
     ### Formulas Used:
     
     **FDCI (No Inflation Adjustment)**:
-    \[
+    $$ 
     \text{FDCI (No Inflation)} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Cost}}}
-    \]
+    $$
     
     **FDCI (With Inflation Adjustment)**:
-    \[
+    $$ 
     \text{FDCI (With Inflation)} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Adjusted Cost}}}
-    \]
+    $$ 
     Where:
-    \[
+    $$ 
     \text{Adjusted Cost} = \text{Cost} \times \frac{{\text{Current CPI}}}{{\text{Base CPI}}}
-    \]
-    
+    $$
+
     **DCI**:
-    \[
+    $$ 
     \text{DCI} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Cost}}}
-    \]
+    $$
     """)
 
     # Start the calculation and display results
