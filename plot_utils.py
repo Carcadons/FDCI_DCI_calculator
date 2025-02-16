@@ -13,14 +13,14 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
     - dci_values: List of DCI values.
     
     Returns:
-    - fig1: Figure object for FDCI graph (no inflation).
+    - fig1: Figure object for FDCI graph.
     - fig2: Figure object for DCI graph.
     - fig3: Figure object for FDCI and DCI comparison graph.
     """
     # Plot FDCI with both adjusted and non-adjusted for inflation
     fig1, ax1 = plt.subplots(figsize=(10, 6))
-    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
-    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Inflation Adjustment)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
+    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
     ax1.set_xlabel('Phase', fontsize=12)
     ax1.set_ylabel('FDCI', fontsize=12)
     ax1.set_title('FDCI Comparison: Inflation Adjusted vs. Non-Adjusted', fontsize=14)
@@ -38,7 +38,8 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
 
     # Plot FDCI and DCI together
     fig3, ax3 = plt.subplots(figsize=(10, 6))
-    ax3.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
     ax3.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
     ax3.set_xlabel('Phase', fontsize=12)
     ax3.set_ylabel('Value', fontsize=12)
