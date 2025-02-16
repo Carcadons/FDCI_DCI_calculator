@@ -132,7 +132,7 @@ def app():
     # Start the calculation and display results
     if st.button("Calculate"):
         # Calculate FDCI, DCI, and material costs
-        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirement, cpis, years)
+        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirements, cpis, years)
         
         # Calculate inflation-adjusted and non-inflation-adjusted material costs
         inflation_adjusted_costs, non_inflation_adjusted_costs = calculate_material_costs(material_prices, cpis, num_phases)
