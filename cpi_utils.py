@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 
 def load_cpi_data():
     with open('data/cpi_database.json', 'r') as f:
