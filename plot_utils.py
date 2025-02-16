@@ -1,7 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
-import io  # For saving the plot to a buffer
 
 def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     """
@@ -54,7 +53,7 @@ def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inf
     inverted_dci_values = [1 - dci for dci in dci_values]
 
     # Plot FDCI and Inverted DCI
-    fig4, ax1 = plt.subplots(figsize=(10, 6))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
 
     # Plot FDCI values (No Inflation and With Inflation)
     ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue')
@@ -78,7 +77,7 @@ def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inf
     ax2.legend(loc='upper right')
 
     # Display the plot in Streamlit
-    return fig4
+    return fig
 
 def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation_adjusted_costs, material_type):
     """
@@ -92,7 +91,7 @@ def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation
     Returns:
     - fig: Figure object for the material cost comparison graph.
     """
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig4, ax = plt.subplots(figsize=(10, 6))
     
     ax.plot(years, inflation_adjusted_costs, label="Material Cost (With Inflation Adjustment)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
     ax.plot(years, non_inflation_adjusted_costs, label="Material Cost (Without Inflation Adjustment)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
@@ -103,18 +102,4 @@ def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation
     ax.grid(True)
     ax.legend(title="Material Cost", fontsize=10)
 
-    return fig
-
-def save_plot_to_buffer(fig):
-    """
-    Save a plot to a buffer to allow downloading it as a PNG file.
-    Arguments:
-    - fig: Matplotlib figure to save to the buffer.
-    
-    Returns:
-    - buf: A BytesIO buffer with the saved plot.
-    """
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png')
-    buf.seek(0)  # Move back to the beginning of the buffer
-    return buf
+    return fig4
