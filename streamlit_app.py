@@ -6,7 +6,7 @@ from calculations import calculate_indices, calculate_material_costs
 from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
 
 # Function to display the results table in Streamlit
-def display_table(material_required, reused_material, years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
+def display_table(material_requirements, reused_material, years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     """
     Display the results of FDCI and DCI calculations in a table format in Streamlit.
     Arguments:
@@ -17,7 +17,7 @@ def display_table(material_required, reused_material, years, fdci_values_no_infl
     """
     results_data = {
         "Phase Year": years,
-        "Material Required": material_required,
+        "Material Required": material_requirements,
         "Reused Material": reused_material,        
         "FDCI (No Infl. Adj.)": fdci_values_no_inflation,
         "FDCI (With Infl. Adj.)": fdci_values_with_inflation,
