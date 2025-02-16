@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 
 def calculate_indices(num_phases, material_prices, reuse_factors, material_requirements, cpis, years):
