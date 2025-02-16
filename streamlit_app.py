@@ -22,11 +22,11 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
 
     # Create a dataframe for displaying the results
     results_data = {
-        "Phase Year": years,
-        "Material Requirement (tons)": material_requirement,
-        "Material Reuse (tons)": material_reuse,
-        "FDCI (No Inflation)": fdci_values_no_inflation,
-        "FDCI (With Inflation)": fdci_values_with_inflation,
+        "Year": years,
+        "Mat. Rqrd (tons)": material_requirement,
+        "Mat. Rusd (tons)": material_reuse,
+        "FDCI (No Infl. Adj.)": fdci_values_no_inflation,
+        "FDCI (With Inflation. Adj.)": fdci_values_with_inflation,
         "DCI": dci_values
     }
     
