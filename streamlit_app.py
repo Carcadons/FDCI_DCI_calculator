@@ -24,7 +24,7 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     
     results_df = pd.DataFrame(results_data)
     st.write("### Results Table: FDCI and DCI")
-    st.write(results_df)
+    st.dataframe(results_df)  # Use st.dataframe instead of st.write
 
 def app():
     st.title("FDCI and DCI Calculator")
@@ -92,7 +92,7 @@ def app():
     }
     recap_df = pd.DataFrame(recap_data)
     st.write("### Summary Table: CPI and Material Prices for Each Phase")
-    st.write(recap_df)
+    st.dataframe(recap_df)  # Use st.dataframe instead of st.write
 
     # Ask the user if they want to fix the reuse rate for all phases
     fix_reuse_rate = st.checkbox("Fix the Reuse Rate for All Phases")
