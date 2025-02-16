@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
-from calculations import calculate_indices
-from plot_utils import plot_graphs, save_plot_to_buffer, display_table
+from calculations import calculate_indices, calculate_material_costs
+from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer, display_table
 
 def app():
     st.title("FDCI and DCI Calculator")
@@ -95,24 +95,31 @@ def app():
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
+        # Calculate FDCI, DCI, and material costs
         fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirement, cpis, years)
+        
+        # Calculate inflation-adjusted and non-inflation-adjusted material costs
+        inflation_adjusted_costs, non_inflation_adjusted_costs = calculate_material_costs(material_prices, cpis, num_phases)
         
         # Display results in table
         display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
         
         # Plot the graphs
         fig1, fig2, fig3 = plot_graphs(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
+        fig4 = plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation_adjusted_costs, material_type)
         
         # Display the plots in Streamlit
         st.pyplot(fig1)
         st.pyplot(fig2)
         st.pyplot(fig3)
+        st.pyplot(fig4)
 
         # Save plot button (optional)
         if st.button("Save Plot as PNG"):
             buf1 = save_plot_to_buffer(fig1)
             buf2 = save_plot_to_buffer(fig2)
             buf3 = save_plot_to_buffer(fig3)
+            buf4 = save_plot_to_buffer(fig4)
             
             st.download_button(
                 label="Download FDCI Plot (PNG)",
@@ -132,6 +139,13 @@ def app():
                 label="Download FDCI and DCI Comparison Plot (PNG)",
                 data=buf3,
                 file_name="fdci_dci_comparison.png",
+                mime="image/png"
+            )
+
+            st.download_button(
+                label="Download Material Cost Comparison Plot (PNG)",
+                data=buf4,
+                file_name="material_cost_comparison.png",
                 mime="image/png"
             )
 
