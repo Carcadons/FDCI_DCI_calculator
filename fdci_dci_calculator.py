@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd  # Import pandas with the alias 'pd'
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io  # For saving the plot as a buffer
 
 # Function to calculate FDCI and DCI for each phase
 def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirements, cpis, years):
@@ -75,6 +76,13 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
 
     return fig1, fig2, fig3
 
+# Function to save the plot to a BytesIO buffer
+def save_plot_to_buffer(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png")
+    buf.seek(0)
+    return buf
+
 # Function to display the results in a table
 def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     data = {
@@ -128,10 +136,30 @@ def app():
 
         # Save plot button (optional)
         if st.button("Save Plot as PNG"):
-            fig1.savefig("fdci_comparison.png")
-            fig2.savefig("dci_comparison.png")
-            fig3.savefig("fdci_dci_comparison.png")
-            st.success("Plots saved as PNG files.")
+            buf1 = save_plot_to_buffer(fig1)
+            buf2 = save_plot_to_buffer(fig2)
+            buf3 = save_plot_to_buffer(fig3)
+            
+            st.download_button(
+                label="Download FDCI Plot (PNG)",
+                data=buf1,
+                file_name="fdci_comparison.png",
+                mime="image/png"
+            )
+
+            st.download_button(
+                label="Download DCI Plot (PNG)",
+                data=buf2,
+                file_name="dci_comparison.png",
+                mime="image/png"
+            )
+
+            st.download_button(
+                label="Download FDCI and DCI Comparison Plot (PNG)",
+                data=buf3,
+                file_name="fdci_dci_comparison.png",
+                mime="image/png"
+            )
 
 # Run the Streamlit app
 if __name__ == "__main__":
