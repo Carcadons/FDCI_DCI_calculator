@@ -1,4 +1,6 @@
+import streamlit as st
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     # Plot FDCI with both adjusted and non-adjusted for inflation
