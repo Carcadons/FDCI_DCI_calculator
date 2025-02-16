@@ -1,10 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
-import pandas as pd
+import pandas as pd  # Make sure to import pandas
 import json  # For reading the JSON file
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import io  # For saving the plot as a buffer
+
+# Function to load CPI data from an external JSON file
+def load_cpi_data():
+    with open('cpi_database.json', 'r') as f:
+        cpi_data = json.load(f)
+    return cpi_data
+
+# Function to load Steel Prices from an external JSON file
+def load_steel_prices():
+    with open('steel_prices.json', 'r') as f:
+        steel_prices_data = json.load(f)
+    return steel_prices_data
 
 # Function to display the results in a table
 def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
@@ -16,12 +28,6 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     }
     df = pd.DataFrame(data)
     st.write(df)
-
-# Function to load CPI data from an external JSON file
-def load_cpi_data():
-    with open('cpi_database.json', 'r') as f:
-        cpi_data = json.load(f)
-    return cpi_data
 
 # Function to calculate FDCI and DCI for each phase
 def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirements, cpis, years):
@@ -102,6 +108,9 @@ def app():
     # Load CPI data from the external JSON file
     cpi_database = load_cpi_data()
 
+    # Load Steel Prices from the external JSON file
+    steel_prices_data = load_steel_prices()
+
     num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
     
     # Ask the user if they want to use the default CPI database or manually input CPIs
@@ -118,16 +127,29 @@ def app():
             # Manually input CPI
             cpis.append(st.number_input(f"Enter CPI for Phase {i+1}", min_value=0.0, value=100.0))
 
-    # Gather other inputs
+    # Ask the user if they want to use the steel price database or manually input values
+    use_steel_price_database = st.checkbox("Use default Steel Price database (1900-2025)")
+
+    steel_prices = []
+    for i in range(num_phases):
+        if use_steel_price_database:
+            # Allow the user to select a year and use the steel price from the database
+            year = st.number_input(f"Select Year for Phase {i+1} Steel Price (1900-2025)", min_value=1900, max_value=2025, value=2022)
+            # Get steel price for the selected year from the database
+            price = steel_prices_data.get(str(year), 500)  # Default to 500 if year is not found
+            steel_prices.append(price)
+        else:
+            # Manually input steel price
+            steel_prices.append(st.number_input(f"Enter Steel Price for Phase {i+1} (USD per ton)", min_value=0.0, value=500.0))
+
+    # Gather other inputs for the steel requirements and reuse factors
     steel_requirement = [st.number_input("Enter initial quantity of steel for Phase 1 (tons)", min_value=1, value=1000)]
-    steel_prices = [st.number_input(f"Phase 1 - Steel Price (USD per ton)", min_value=0.0, value=500.0)]
     reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
     years = [2022]  # Default to the current year
 
-    # Gather the rest of the data
+    # Gather the rest of the data for phases
     for i in range(1, num_phases):
         steel_requirement.append(st.number_input(f"Phase {i+1} - Steel Requirement (tons)", min_value=1, value=1000))
-        steel_prices.append(st.number_input(f"Phase {i+1} - Steel Price (USD per ton)", min_value=0.0, value=500.0))
         reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
         years.append(st.number_input(f"Phase {i+1} - Year", min_value=1900, max_value=2025, value=2022))
 
