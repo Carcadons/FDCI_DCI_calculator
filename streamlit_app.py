@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices
