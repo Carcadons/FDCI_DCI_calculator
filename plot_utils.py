@@ -74,7 +74,7 @@ def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inf
 
     # Show legend
     ax1.legend(loc='upper left')
-    ax2.legend(loc='bottom left')
+    ax2.legend(loc='lower left')
     ax1.legend(title="LEGEND", fontsize=10)
     ax2.legend(title="LEGEND", fontsize=10)
 
