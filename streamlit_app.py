@@ -17,7 +17,16 @@ def app():
     # Load material prices from the selected material type
     material_prices_data = load_material_prices(material_type)
 
-    num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
+    # Ask the user to define the number of phases
+    num_phases = st.number_input("Enter number of phases", min_value=1, max_value=25, value=3)
+
+    # Ask the user to input phase year
+    years_input = st.text_input("Enter years for all phases (comma-separated)", value="1900,1950,2025")
+    # Split the input by commas to create a list of years
+    years = [int(year.strip()) for year in years_input.split(',')]
+    # Validate that the number of years matches the number of phases
+    if len(years) != num_phases:
+        st.error(f"Please enter exactly {num_phases} years for the phases.")
     
     # Ask the user if they want to use the default CPI database or manually input CPIs
     use_cpi_database = st.checkbox("Use default CPI database (1900-2025)")
@@ -30,16 +39,6 @@ def app():
             cpis.append(cpi_database.get(str(year), 100))  # Default to 100 if CPI is not available for the selected year
         else:
             cpis.append(st.number_input(f"Enter CPI for Phase {i+1}", min_value=0.0, value=100.0))
-
-    # Ask the user to input phase years all at once
-    years_input = st.text_input("Enter years for all phases (comma-separated)", value="2022,2023,2024")
-
-    # Split the input by commas to create a list of years
-    years = [int(year.strip()) for year in years_input.split(',')]
-
-    # Validate that the number of years matches the number of phases
-    if len(years) != num_phases:
-        st.error(f"Please enter exactly {num_phases} years for the phases.")
 
     # Ask the user if they want to use the material price database or manually input values
     use_material_price_database = st.checkbox(f"Use default {material_type.capitalize()} Price database (1900-2025)")
