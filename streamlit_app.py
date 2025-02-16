@@ -17,8 +17,8 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     """
     results_data = {
         "Phase Year": years,
-        "FDCI (No Inflation)": fdci_values_no_inflation,
-        "FDCI (With Inflation)": fdci_values_with_inflation,
+        "FDCI (No Infl. Adj.)": fdci_values_no_inflation,
+        "FDCI (With Infl. Adj.)": fdci_values_with_inflation,
         "DCI": dci_values
     }
     
@@ -41,7 +41,7 @@ def app():
     num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
     
     # Ask the user if they want to use the default CPI database or manually input CPIs
-    use_cpi_database = st.checkbox("Use default CPI database (1900-2025)")
+    use_cpi_database = st.checkbox("Use default U.S. CPI database (1900-2025)")
     
     # Ask the user to input phase years all at once
     years_input = st.text_input("Enter years for all phases (comma-separated)", value="2022,2023,2024")
@@ -83,7 +83,7 @@ def app():
         else:
             material_prices.append(st.number_input(f"Enter {material_type.capitalize()} Price for Phase {i+1} (USD per unit)", min_value=0.0, value=500.0))
 
-    # Display a recap table for CPI and Material Prices
+    # Display a summary table for CPI and Material Prices
     recap_data = {
         "Phase": [f"Phase {i+1}" for i in range(num_phases)],
         "Year": years,
@@ -91,7 +91,7 @@ def app():
         f"{material_type.capitalize()} Price (USD)": material_prices
     }
     recap_df = pd.DataFrame(recap_data)
-    st.write("### Recap Table: CPI and Material Prices for Each Phase")
+    st.write("### Summary Table: CPI and Material Prices for Each Phase")
     st.write(recap_df)
 
     # Ask the user if they want to fix the reuse rate for all phases
@@ -121,7 +121,7 @@ def app():
             material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
 
     # Start the calculation and display results
-    if st.button("Start Calculation"):
+    if st.button("Calculate"):
         # Calculate FDCI, DCI, and material costs
         fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirement, cpis, years)
         
