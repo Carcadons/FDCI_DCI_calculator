@@ -50,6 +50,8 @@ def calculate_material_costs(material_prices, cpis, num_phases):
 
     for i in range(num_phases):
         # Calculate inflation-adjusted cost using the formula:
+        past_cpi = cpis[i]  # CPI for the current phase (the past CPI for that phase)
+        today_cpi = 300.0  # Assume today's CPI is 300
         inflation_adjusted_cost = material_prices[i] * (today_cpi / past_cpi)  # Adjust for CPI
         inflation_adjusted_costs.append(inflation_adjusted_cost)
         non_inflation_adjusted_costs.append(material_prices[i])
