@@ -49,6 +49,37 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
 
     return fig1, fig2, fig3
 
+def plot_comparison_graph(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
+    # Invert DCI for better comparison
+    inverted_dci_values = [1 - dci for dci in dci_values]
+
+    # Plot FDCI and Inverted DCI
+    fig4, ax1 = plt.subplots(figsize=(10, 6))
+
+    # Plot FDCI values (No Inflation and With Inflation)
+    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Inflation Adjustment)", marker='o', linestyle='-', color='blue')
+    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Inflation Adjustment)", marker='o', linestyle='--', color='green')
+    ax1.set_xlabel('Phase')
+    ax1.set_ylabel('FDCI', color='blue')
+    ax1.tick_params(axis='y', labelcolor='blue')
+
+    # Create a second y-axis for the inverted DCI
+    ax2 = ax1.twinx()
+    ax2.plot(phases, inverted_dci_values, label="Inverted DCI", marker='o', linestyle='-', color='red')
+    ax2.set_ylabel('Inverted DCI', color='red')
+    ax2.tick_params(axis='y', labelcolor='red')
+
+    # Add title and legend
+    plt.title('Comparison of FDCI and Inverted DCI')
+    fig.tight_layout()  # Adjust layout to prevent overlap
+
+    # Show legend
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')
+
+    # Display the plot in Streamlit
+    return fig4
+
 def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation_adjusted_costs, material_type):
     """
     Plot the comparison of material costs (with and without inflation adjustment).
