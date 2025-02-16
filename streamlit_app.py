@@ -55,8 +55,9 @@ def app():
     material_prices = []
     for i in range(num_phases):
         if use_material_price_database:
-            year = st.number_input(f"Select Year for Phase {i+1} {material_type.capitalize()} Price (1900-2025)", min_value=1900, max_value=2025, value=2022)
-            price = material_prices_data.get(str(year), 500)
+            # Fetch the material price for the selected year from the database
+            year = years[i]  # Use the year for the corresponding phase
+            price = material_prices_data.get(str(year), 500)  # Default to 500 if year is not found
             material_prices.append(price)
         else:
             material_prices.append(st.number_input(f"Enter {material_type.capitalize()} Price for Phase {i+1} (USD per unit)", min_value=0.0, value=500.0))
