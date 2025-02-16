@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
+import io  # For saving the plot to a buffer
 
 def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     """
@@ -71,3 +72,17 @@ def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation
     ax.legend(title="Material Cost", fontsize=10)
 
     return fig
+
+def save_plot_to_buffer(fig):
+    """
+    Save a plot to a buffer to allow downloading it as a PNG file.
+    Arguments:
+    - fig: Matplotlib figure to save to the buffer.
+    
+    Returns:
+    - buf: A BytesIO buffer with the saved plot.
+    """
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)  # Move back to the beginning of the buffer
+    return buf
