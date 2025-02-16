@@ -1,7 +1,4 @@
-import streamlit as st
 import matplotlib.pyplot as plt
-import pandas as pd
-import io
 
 def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
     # Plot FDCI with both adjusted and non-adjusted for inflation
@@ -34,6 +31,19 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
     ax3.legend(title="Comparison", fontsize=10)
 
     return fig1, fig2, fig3
+
+def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation_adjusted_costs, material_type):
+    # Plot the material cost comparison (with and without inflation adjustment)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, inflation_adjusted_costs, label="Material Cost (With Inflation Adjustment)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax.plot(years, non_inflation_adjusted_costs, label="Material Cost (Without Inflation Adjustment)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
+    ax.set_xlabel('Year', fontsize=12)
+    ax.set_ylabel('Material Cost (USD)', fontsize=12)
+    ax.set_title(f'{material_type.capitalize()} Material Cost Comparison', fontsize=14)
+    ax.grid(True)
+    ax.legend(title="Material Cost", fontsize=10)
+
+    return fig
 
 def save_plot_to_buffer(fig):
     buf = io.BytesIO()
