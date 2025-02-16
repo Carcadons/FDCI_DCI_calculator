@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 
 def load_material_prices(material_type):
     if material_type == "steel":
