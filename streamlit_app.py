@@ -3,27 +3,7 @@ import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices, calculate_material_costs
-from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
-
-def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
-    """
-    Display the results of FDCI and DCI calculations in a table format in Streamlit.
-    Arguments:
-    - years: List of phase years.
-    - fdci_values_no_inflation: List of FDCI values without inflation adjustment.
-    - fdci_values_with_inflation: List of FDCI values with inflation adjustment.
-    - dci_values: List of DCI values.
-    """
-    results_data = {
-        "Phase Year": years,
-        "FDCI (No Inflation)": fdci_values_no_inflation,
-        "FDCI (With Inflation)": fdci_values_with_inflation,
-        "DCI": dci_values
-    }
-    
-    results_df = pd.DataFrame(results_data)
-    st.write("### Results Table: FDCI and DCI")
-    st.write(results_df)
+from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer, display_table
 
 def app():
     st.title("FDCI and DCI Calculator")
@@ -93,25 +73,23 @@ def app():
     st.write("### Recap Table: CPI and Material Prices for Each Phase")
     st.write(recap_df)
 
-    # Plot the formulas (using LaTeX)
-    st.write("### Formulas Used in the Calculations:")
-    
-    # FDCI Formula (No Inflation Adjustment)
-    st.latex(r"\text{FDCI (No Inflation Adjustment)} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \text{Cost}}")
-    
-    # FDCI Formula (With Inflation Adjustment)
-    st.latex(r"\text{FDCI (With Inflation Adjustment)} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \left(\text{Cost} \times \frac{\text{Current CPI}}{\text{Past CPI}}\right)}")
-    
-    # DCI Formula
-    st.latex(r"\text{DCI} = \frac{\text{Reused Material}}{\text{Reused Material} + \text{Procured Material} \times \text{Cost}}")
+    # Ask the user if they want to fix the reuse rate for all phases
+    fix_reuse_rate = st.checkbox("Fix the Reuse Rate for All Phases")
 
-    # Gather other inputs for the material requirements and reuse factors
+    if fix_reuse_rate:
+        # Input for reuse rate once
+        reuse_factor = st.number_input("Enter the Reuse Factor (%) for All Phases", min_value=0.0, max_value=100.0, value=75.0)
+        reuse_factors = [reuse_factor] * num_phases  # Apply the same factor for all phases
+    else:
+        # Allow the user to input different reuse factors for each phase
+        reuse_factors = []
+        for i in range(num_phases):
+            reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
+
+    # Gather material requirements (initial quantity of material for each phase)
     material_requirement = [st.number_input(f"Enter initial quantity of {material_type} for Phase 1 (tons)", min_value=1, value=1000)]
-    reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
-
     for i in range(1, num_phases):
         material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
-        reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
