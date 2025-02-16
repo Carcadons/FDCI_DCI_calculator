@@ -15,6 +15,7 @@ def calculate_indices(num_phases, material_prices, reuse_factors, material_requi
         reuse_factor = reuse_factors[i]  # Reuse factor for the phase
         material_required = material_requirements[i]  # Material required for the phase
         past_cpi = cpis[i]  # CPI for the current phase (the past CPI for that phase)
+        today_cpi = 300.0  # Assume today's CPI is 300
         current_year = years[i]  # Year for the current phase
         
         # Reused material based on the reuse factor
