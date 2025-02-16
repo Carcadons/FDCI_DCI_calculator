@@ -38,8 +38,8 @@ def plot_graphs(phases, fdci_values_no_inflation, fdci_values_with_inflation, dc
 
     # Plot FDCI and DCI together
     fig3, ax3 = plt.subplots(figsize=(10, 6))
-    ax1.plot(phases, fdci_values_no_inflation, label="FDCI (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
-    ax1.plot(phases, fdci_values_with_inflation, label="FDCI (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
+    ax3.plot(phases, fdci_values_no_inflation, label="FDCI (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
+    ax3.plot(phases, fdci_values_with_inflation, label="FDCI (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
     ax3.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
     ax3.set_xlabel('Phase', fontsize=12)
     ax3.set_ylabel('Value', fontsize=12)
