@@ -3,7 +3,7 @@ import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices, calculate_material_costs
-from plot_utils import plot_graphs, plot_material_cost_comparison
+from plot_utils import plot_graphs, plot_comparison_graph, plot_material_cost_comparison
 
 # Function to display the results table in Streamlit
 def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirement, reuse_factors):
