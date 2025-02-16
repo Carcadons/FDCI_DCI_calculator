@@ -142,6 +142,17 @@ def app():
             # Manually input steel price
             steel_prices.append(st.number_input(f"Enter Steel Price for Phase {i+1} (USD per ton)", min_value=0.0, value=500.0))
 
+    # Display a recap table for CPI and Steel Prices for each phase
+    recap_data = {
+        "Phase": [f"Phase {i+1}" for i in range(num_phases)],
+        "Year": [str(year) for year in range(2022, 2022 + num_phases)],
+        "CPI": cpis,
+        "Steel Price (USD per ton)": steel_prices
+    }
+    recap_df = pd.DataFrame(recap_data)
+    st.write("### Recap Table: CPI and Steel Prices for Each Phase")
+    st.write(recap_df)
+
     # Gather other inputs for the steel requirements and reuse factors
     steel_requirement = [st.number_input("Enter initial quantity of steel for Phase 1 (tons)", min_value=1, value=1000)]
     reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
@@ -198,3 +209,4 @@ def app():
 # Run the Streamlit app
 if __name__ == "__main__":
     app()
+    
