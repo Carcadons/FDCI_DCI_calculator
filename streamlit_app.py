@@ -3,7 +3,28 @@ import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices, calculate_material_costs
-from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer, display_table
+from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
+
+# Function to display the results table in Streamlit
+def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
+    """
+    Display the results of FDCI and DCI calculations in a table format in Streamlit.
+    Arguments:
+    - years: List of phase years.
+    - fdci_values_no_inflation: List of FDCI values without inflation adjustment.
+    - fdci_values_with_inflation: List of FDCI values with inflation adjustment.
+    - dci_values: List of DCI values.
+    """
+    results_data = {
+        "Phase Year": years,
+        "FDCI (No Inflation)": fdci_values_no_inflation,
+        "FDCI (With Inflation)": fdci_values_with_inflation,
+        "DCI": dci_values
+    }
+    
+    results_df = pd.DataFrame(results_data)
+    st.write("### Results Table: FDCI and DCI")
+    st.write(results_df)
 
 def app():
     st.title("FDCI and DCI Calculator")
