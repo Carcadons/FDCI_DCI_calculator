@@ -20,8 +20,9 @@ def calculate_indices(num_phases, material_prices, reuse_factors, material_requi
         fdci_no_inflation = reused_material / (reused_material + procured_material * cost)
         fdci_values_no_inflation.append(fdci_no_inflation)
         
-        past_cpi = cpis[0]
-        adjusted_cost = cost * (current_cpi / past_cpi)
+        # Inflation-adjusted cost using CPI values
+        past_cpi = cpis[0]  # Assume CPI of the first phase is the base CPI
+        adjusted_cost = cost * (past_cpi / current_cpi)
         fdci_with_inflation = reused_material / (reused_material + procured_material * adjusted_cost)
         fdci_values_with_inflation.append(fdci_with_inflation)
         
@@ -31,3 +32,15 @@ def calculate_indices(num_phases, material_prices, reuse_factors, material_requi
         material_from_previous = reused_material
 
     return fdci_values_no_inflation, fdci_values_with_inflation, dci_values
+
+def calculate_material_costs(material_prices, cpis, num_phases):
+    inflation_adjusted_costs = []
+    non_inflation_adjusted_costs = []
+
+    for i in range(num_phases):
+        # Calculate inflation-adjusted cost using the formula:
+        inflation_adjusted_cost = material_prices[i] * (cpis[0] / cpis[i])  # Adjust for CPI
+        inflation_adjusted_costs.append(inflation_adjusted_cost)
+        non_inflation_adjusted_costs.append(material_prices[i])
+
+    return inflation_adjusted_costs, non_inflation_adjusted_costs
