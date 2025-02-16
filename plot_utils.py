@@ -91,7 +91,7 @@ def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation
     - material_type: String indicating the material type (steel, wood, concrete).
     
     Returns:
-    - fig: Figure object for the material cost comparison graph.
+    - fig4: Figure object for the material cost comparison graph.
     """
     fig4, ax = plt.subplots(figsize=(10, 6))
     
