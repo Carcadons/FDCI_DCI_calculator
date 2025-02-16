@@ -5,7 +5,7 @@ def calculate_indices(num_phases, material_prices, reuse_factors, material_requi
     fdci_values_no_inflation = []
     fdci_values_with_inflation = []
     dci_values = []
-    material_from_previous = material_requirements[0]  # Initial material quantity for Phase 1
+    material_from_previous = material_requirements[i-1]  # Initial material quantity for Phase 1
     
     for i in range(num_phases):
         cost = material_prices[i]
