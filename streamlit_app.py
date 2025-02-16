@@ -6,7 +6,7 @@ from calculations import calculate_indices, calculate_material_costs
 from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
 
 # Function to display the results table in Streamlit
-def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirements, reuse_factors):
+def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirement, reuse_factors):
     """
     Display the results of FDCI and DCI calculations in a table format in Streamlit.
     Arguments:
@@ -14,16 +14,16 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     - fdci_values_no_inflation: List of FDCI values without inflation adjustment.
     - fdci_values_with_inflation: List of FDCI values with inflation adjustment.
     - dci_values: List of DCI values.
-    - material_requirements: List of material requirements (tons) for each phase.
+    - material_requirement: List of material requirements (tons) for each phase.
     - reuse_factors: List of reuse factors (%) for each phase.
     """
     # Calculate material reuse for each phase
-    material_reuse = [material * (reuse_factor / 100) for material, reuse_factor in zip(material_requirements, reuse_factors)]
+    material_reuse = [material * (reuse_factor / 100) for material, reuse_factor in zip(material_requirement, reuse_factors)]
 
     # Create a dataframe for displaying the results
     results_data = {
         "Phase Year": years,
-        "Material Requirement (tons)": material_requirements,
+        "Material Requirement (tons)": material_requirement,
         "Material Reuse (tons)": material_reuse,
         "Reuse Factor (%)": reuse_factors,
         "FDCI (No Inflation)": fdci_values_no_inflation,
@@ -132,13 +132,13 @@ def app():
     # Start the calculation and display results
     if st.button("Calculate"):
         # Calculate FDCI, DCI, and material costs
-        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirements, cpis, years)
+        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirement, cpis, years)
         
         # Calculate inflation-adjusted and non-inflation-adjusted material costs
         inflation_adjusted_costs, non_inflation_adjusted_costs = calculate_material_costs(material_prices, cpis, num_phases)
         
         # Display results in table
-        display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirements, reuse_factors)
+        display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirement, reuse_factors)
         
         # Plot the graphs
         fig1, fig2, fig3 = plot_graphs(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
