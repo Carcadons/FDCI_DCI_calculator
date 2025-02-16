@@ -2,4 +2,4 @@ numpy
 pandas
 matplotlib
 tk
-python-tk
+python3-tk
