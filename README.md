@@ -1,7 +1,5 @@
 # FDCI_DCI_calculator
 
-
-
 fdci_dci_calculator/
 │
 ├── app.py  # Main entry point
