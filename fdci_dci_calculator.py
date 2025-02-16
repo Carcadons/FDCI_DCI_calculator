@@ -119,6 +119,30 @@ def app():
         years.append(st.number_input(f"Phase {i+1} - Year", min_value=1, value=2022))  # No lower bound for the year
         cpis.append(st.number_input(f"Phase {i+1} - CPI", min_value=0.0, value=100.0))
 
+    # Display formulas before showing the results
+    st.markdown("""
+    ### Formulas Used:
+    
+    **FDCI (No Inflation Adjustment)**:
+    \[
+    \text{FDCI (No Inflation)} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Cost}}}
+    \]
+    
+    **FDCI (With Inflation Adjustment)**:
+    \[
+    \text{FDCI (With Inflation)} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Adjusted Cost}}}
+    \]
+    Where:
+    \[
+    \text{Adjusted Cost} = \text{Cost} \times \frac{{\text{Current CPI}}}{{\text{Base CPI}}}
+    \]
+    
+    **DCI**:
+    \[
+    \text{DCI} = \frac{{\text{Reused Steel}}}{{\text{Reused Steel} + \text{Procured Steel} \times \text{Cost}}}
+    \]
+    """)
+
     # Start the calculation and display results
     if st.button("Start Calculation"):
         fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years)
