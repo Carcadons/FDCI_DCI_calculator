@@ -12,11 +12,20 @@ def load_cpi_data():
         cpi_data = json.load(f)
     return cpi_data
 
-# Function to load Steel Prices from an external JSON file
-def load_steel_prices():
-    with open('steel_prices.json', 'r') as f:
-        steel_prices_data = json.load(f)
-    return steel_prices_data
+# Function to load Material Prices from an external JSON file
+def load_material_prices(material_type):
+    if material_type == "steel":
+        with open('steel_prices.json', 'r') as f:
+            material_prices = json.load(f)
+    elif material_type == "wood":
+        with open('wood_prices.json', 'r') as f:
+            material_prices = json.load(f)
+    elif material_type == "concrete":
+        with open('concrete_prices.json', 'r') as f:
+            material_prices = json.load(f)
+    else:
+        raise ValueError("Invalid material type")
+    return material_prices
 
 # Function to display the results in a table
 def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
@@ -30,34 +39,34 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     st.write(df)
 
 # Function to calculate FDCI and DCI for each phase
-def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirements, cpis, years):
+def calculate_indices(num_phases, material_prices, reuse_factors, material_requirements, cpis, years):
     fdci_values_no_inflation = []
     fdci_values_with_inflation = []
     dci_values = []
-    steel_from_previous = steel_requirements[0]  # Initial steel quantity for Phase 1
+    material_from_previous = material_requirements[0]  # Initial material quantity for Phase 1
     
     for i in range(num_phases):
-        cost = steel_prices[i]
+        cost = material_prices[i]
         reuse_factor = reuse_factors[i]
-        steel_required = steel_requirements[i]
+        material_required = material_requirements[i]
         current_cpi = cpis[i]
         current_year = years[i]
         
-        reused_steel = steel_from_previous * reuse_factor / 100
-        procured_steel = steel_required - reused_steel
+        reused_material = material_from_previous * reuse_factor / 100
+        procured_material = material_required - reused_material
         
-        fdci_no_inflation = reused_steel / (reused_steel + procured_steel * cost)
+        fdci_no_inflation = reused_material / (reused_material + procured_material * cost)
         fdci_values_no_inflation.append(fdci_no_inflation)
         
         past_cpi = cpis[0]
         adjusted_cost = cost * (current_cpi / past_cpi)
-        fdci_with_inflation = reused_steel / (reused_steel + procured_steel * adjusted_cost)
+        fdci_with_inflation = reused_material / (reused_material + procured_material * adjusted_cost)
         fdci_values_with_inflation.append(fdci_with_inflation)
         
-        dci = reused_steel / (reused_steel + procured_steel * cost)
+        dci = reused_material / (reused_material + procured_material * cost)
         dci_values.append(dci)
         
-        steel_from_previous = reused_steel
+        material_from_previous = reused_material
 
     return fdci_values_no_inflation, fdci_values_with_inflation, dci_values
 
@@ -108,8 +117,11 @@ def app():
     # Load CPI data from the external JSON file
     cpi_database = load_cpi_data()
 
-    # Load Steel Prices from the external JSON file
-    steel_prices_data = load_steel_prices()
+    # Allow user to select the material (steel, wood, or concrete)
+    material_type = st.selectbox("Select Material for Calculation", ["steel", "wood", "concrete"])
+
+    # Load material prices from the selected material type
+    material_prices_data = load_material_prices(material_type)
 
     num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
     
@@ -127,46 +139,46 @@ def app():
             # Manually input CPI
             cpis.append(st.number_input(f"Enter CPI for Phase {i+1}", min_value=0.0, value=100.0))
 
-    # Ask the user if they want to use the steel price database or manually input values
-    use_steel_price_database = st.checkbox("Use default Steel Price database (1900-2025)")
+    # Ask the user if they want to use the material price database or manually input values
+    use_material_price_database = st.checkbox(f"Use default {material_type.capitalize()} Price database (1900-2025)")
 
-    steel_prices = []
+    material_prices = []
     for i in range(num_phases):
-        if use_steel_price_database:
-            # Allow the user to select a year and use the steel price from the database
-            year = st.number_input(f"Select Year for Phase {i+1} Steel Price (1900-2025)", min_value=1900, max_value=2025, value=2022)
-            # Get steel price for the selected year from the database
-            price = steel_prices_data.get(str(year), 500)  # Default to 500 if year is not found
-            steel_prices.append(price)
+        if use_material_price_database:
+            # Allow the user to select a year and use the material price from the database
+            year = st.number_input(f"Select Year for Phase {i+1} {material_type.capitalize()} Price (1900-2025)", min_value=1900, max_value=2025, value=2022)
+            # Get material price for the selected year from the database
+            price = material_prices_data.get(str(year), 500)  # Default to 500 if year is not found
+            material_prices.append(price)
         else:
-            # Manually input steel price
-            steel_prices.append(st.number_input(f"Enter Steel Price for Phase {i+1} (USD per ton)", min_value=0.0, value=500.0))
+            # Manually input material price
+            material_prices.append(st.number_input(f"Enter {material_type.capitalize()} Price for Phase {i+1} (USD per unit)", min_value=0.0, value=500.0))
 
-    # Display a recap table for CPI and Steel Prices for each phase
+    # Display a recap table for CPI and Material Prices for each phase
     recap_data = {
         "Phase": [f"Phase {i+1}" for i in range(num_phases)],
         "Year": [str(year) for year in range(2022, 2022 + num_phases)],
         "CPI": cpis,
-        "Steel Price (USD per ton)": steel_prices
+        f"{material_type.capitalize()} Price (USD)": material_prices
     }
     recap_df = pd.DataFrame(recap_data)
-    st.write("### Recap Table: CPI and Steel Prices for Each Phase")
+    st.write("### Recap Table: CPI and Material Prices for Each Phase")
     st.write(recap_df)
 
-    # Gather other inputs for the steel requirements and reuse factors
-    steel_requirement = [st.number_input("Enter initial quantity of steel for Phase 1 (tons)", min_value=1, value=1000)]
+    # Gather other inputs for the material requirements and reuse factors
+    material_requirement = [st.number_input(f"Enter initial quantity of {material_type} for Phase 1 (tons)", min_value=1, value=1000)]
     reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
     years = [2022]  # Default to the current year
 
     # Gather the rest of the data for phases
     for i in range(1, num_phases):
-        steel_requirement.append(st.number_input(f"Phase {i+1} - Steel Requirement (tons)", min_value=1, value=1000))
+        material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
         reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
         years.append(st.number_input(f"Phase {i+1} - Year", min_value=1900, max_value=2025, value=2022))
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
-        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years)
+        fdci_values_no_inflation, fdci_values_with_inflation, dci_values = calculate_indices(num_phases, material_prices, reuse_factors, material_requirement, cpis, years)
         
         # Display results in table
         display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values)
@@ -209,4 +221,3 @@ def app():
 # Run the Streamlit app
 if __name__ == "__main__":
     app()
-    
