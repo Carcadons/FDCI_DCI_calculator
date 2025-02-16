@@ -6,7 +6,7 @@ from calculations import calculate_indices, calculate_material_costs
 from plot_utils import plot_graphs, plot_material_cost_comparison, save_plot_to_buffer
 
 # Function to display the results table in Streamlit
-def display_table(material_requirements, reused_material, years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values):
+def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, dci_values, material_requirements, reuse_factors):
     """
     Display the results of FDCI and DCI calculations in a table format in Streamlit.
     Arguments:
@@ -14,18 +14,25 @@ def display_table(material_requirements, reused_material, years, fdci_values_no_
     - fdci_values_no_inflation: List of FDCI values without inflation adjustment.
     - fdci_values_with_inflation: List of FDCI values with inflation adjustment.
     - dci_values: List of DCI values.
+    - material_requirements: List of material requirements (tons) for each phase.
+    - reuse_factors: List of reuse factors (%) for each phase.
     """
+    # Calculate material reuse for each phase
+    material_reuse = [material * (reuse_factor / 100) for material, reuse_factor in zip(material_requirements, reuse_factors)]
+
+    # Create a dataframe for displaying the results
     results_data = {
         "Phase Year": years,
-        "Material Required": material_requirements,
-        "Reused Material": reused_material,        
-        "FDCI (No Infl. Adj.)": fdci_values_no_inflation,
-        "FDCI (With Infl. Adj.)": fdci_values_with_inflation,
+        "Material Requirement (tons)": material_requirements,
+        "Material Reuse (tons)": material_reuse,
+        "Reuse Factor (%)": reuse_factors,
+        "FDCI (No Inflation)": fdci_values_no_inflation,
+        "FDCI (With Inflation)": fdci_values_with_inflation,
         "DCI": dci_values
     }
     
     results_df = pd.DataFrame(results_data)
-    st.write("### Results Table: FDCI and DCI")
+    st.write("### Results Table: FDCI, DCI, Material Requirements, and Reuse")
     st.dataframe(results_df)  # Use st.dataframe instead of st.write
 
 def app():
@@ -181,4 +188,3 @@ def app():
 # Run the Streamlit app
 if __name__ == "__main__":
     app()
-
