@@ -1,4 +1,5 @@
 import pandas as pd
+
 def calculate_indices(num_phases, material_prices, reuse_factors, material_requirements, cpis, years):
     fdci_values_no_inflation = []
     fdci_values_with_inflation = []
