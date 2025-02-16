@@ -1,5 +1,3 @@
 numpy
 pandas
 matplotlib
-tk
-python3-tk
