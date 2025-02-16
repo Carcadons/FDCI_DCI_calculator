@@ -41,7 +41,7 @@ def calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement
 
 # Function to plot the graph inside the Tkinter interface
 def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(10, 6))
 
     # Plot based on user's choice: FDCI, DCI, or both
     if plot_type == 'FDCI' or plot_type == 'Both':
@@ -49,17 +49,17 @@ def plot_graph(phases, fdci_values, dci_values, plot_type='FDCI'):
     if plot_type == 'DCI' or plot_type == 'Both':
         ax.plot(phases, dci_values, label="DCI", marker='o', linestyle='-', color='red', linewidth=2, markersize=8)
 
-    ax.set_xlabel('Phase', fontsize=14)
-    ax.set_ylabel('Circularity Index (FDCI & DCI)', fontsize=14)
-    ax.set_title(f'{plot_type} Comparison Across Phases', fontsize=16)
+    ax.set_xlabel('Phase', fontsize=12)
+    ax.set_ylabel('Circularity Index (FDCI & DCI)', fontsize=12)
+    ax.set_title(f'{plot_type} Comparison Across Phases', fontsize=14)
     ax.grid(True)
-    ax.legend(title="Index Type", fontsize=12)
+    ax.legend(title="Index Type", fontsize=10)
 
     # Embed the plot in the Tkinter interface
     canvas = FigureCanvasTkAgg(fig, master=frame_graph)  # Create a canvas to embed the figure
     canvas.draw()
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-    
+
     return fig  # Return the figure to save later
 
 # Function to save the plot as PNG
@@ -84,6 +84,10 @@ def start_calculation():
 
         # Call the function to calculate FDCI and DCI
         fdci_values, dci_values = calculate_indices(num_phases, steel_prices, reuse_factors, steel_requirement, cpis, years, inflation_adjustment)
+
+        # Display the results in a table
+        for i in range(num_phases):
+            table.insert("", "end", values=(years[i], fdci_values[i], dci_values[i]))
 
         # Display the results
         messagebox.showinfo("Calculation Completed", "Calculation complete! Click 'Plot' to view the graph.")
@@ -114,9 +118,14 @@ def reset_inputs():
     reset_button.config(state=tk.DISABLED)
     save_button.config(state=tk.DISABLED)
 
+    # Clear the table
+    for row in table.get_children():
+        table.delete(row)
+
 # Create the main window
 root = tk.Tk()
 root.title("FDCI and DCI Calculator")
+root.geometry("1024x768")  # Set window size to 1024x768
 
 # Function to create input fields dynamically based on number of phases
 def create_phase_inputs():
@@ -184,6 +193,14 @@ generate_button.grid(row=1, column=0, columnspan=2, pady=30)
 # Frame for plotting graph
 frame_graph = tk.Frame(root)
 frame_graph.grid(row=0, column=2, rowspan=10, padx=20)
+
+# Create the table for displaying FDCI and DCI results
+table = ttk.Treeview(root, columns=("Year", "FDCI", "DCI"), show="headings")
+table.grid(row=0, column=0, columnspan=2, pady=100)
+
+table.heading("Year", text="Year")
+table.heading("FDCI", text="FDCI")
+table.heading("DCI", text="DCI")
 
 # Save button
 save_button = tk.Button(root, text="Save Plot as PNG", state=tk.DISABLED)
