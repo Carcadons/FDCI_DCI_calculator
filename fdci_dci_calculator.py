@@ -89,6 +89,9 @@ def app():
 
     num_phases = st.number_input("Enter number of phases", min_value=1, max_value=20, value=3)
     
+    # New field to ask the user for the initial steel quantity (tons)
+    steel_requirement = st.number_input("Enter initial quantity of steel (tons)", min_value=1, value=1000)
+
     steel_prices = []
     reuse_factors = []
     years = []
@@ -99,8 +102,6 @@ def app():
         reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
         years.append(st.number_input(f"Phase {i+1} - Year", min_value=1, value=2022))  # No lower bound for the year
         cpis.append(st.number_input(f"Phase {i+1} - CPI", min_value=0.0, value=100.0))
-
-    steel_requirement = st.number_input("Enter steel requirement (tons per phase)", min_value=1, value=1000)
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
