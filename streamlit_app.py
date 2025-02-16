@@ -17,6 +17,8 @@ def display_table(years, fdci_values_no_inflation, fdci_values_with_inflation, d
     """
     results_data = {
         "Phase Year": years,
+        "Material Required": material_required,
+        "Reused Material": reused_material,        
         "FDCI (No Infl. Adj.)": fdci_values_no_inflation,
         "FDCI (With Infl. Adj.)": fdci_values_with_inflation,
         "DCI": dci_values
