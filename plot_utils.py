@@ -96,7 +96,7 @@ def plot_material_cost_comparison(years, inflation_adjusted_costs, non_inflation
     fig4, ax = plt.subplots(figsize=(10, 6))
     
     ax.plot(years, non_inflation_adjusted_costs, label="Material Cost (No Infl. Adj.)", marker='o', linestyle='-', color='blue', linewidth=2, markersize=8)
-    ax.plot(years, inflation_adjusted_costs, label="Material Cost (With Infl. Adj.)", mmarker='o', linestyle='-', color='green', linewidth=2, markersize=8)
+    ax.plot(years, inflation_adjusted_costs, label="Material Cost (With Infl. Adj.)", marker='o', linestyle='-', color='green', linewidth=2, markersize=8)
     
     ax.set_xlabel('Year', fontsize=12)
     ax.set_ylabel('Material Cost (USD)', fontsize=12)
