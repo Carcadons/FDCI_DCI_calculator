@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd
+import pandas as pd  # Make sure to import pandas
 from cpi_utils import load_cpi_data
 from material_utils import load_material_prices
 from calculations import calculate_indices
@@ -31,6 +31,16 @@ def app():
         else:
             cpis.append(st.number_input(f"Enter CPI for Phase {i+1}", min_value=0.0, value=100.0))
 
+    # Ask the user to input phase years all at once
+    years_input = st.text_input("Enter years for all phases (comma-separated)", value="2022,2023,2024")
+
+    # Split the input by commas to create a list of years
+    years = [int(year.strip()) for year in years_input.split(',')]
+
+    # Validate that the number of years matches the number of phases
+    if len(years) != num_phases:
+        st.error(f"Please enter exactly {num_phases} years for the phases.")
+
     # Ask the user if they want to use the material price database or manually input values
     use_material_price_database = st.checkbox(f"Use default {material_type.capitalize()} Price database (1900-2025)")
 
@@ -46,7 +56,7 @@ def app():
     # Display a recap table for CPI and Material Prices
     recap_data = {
         "Phase": [f"Phase {i+1}" for i in range(num_phases)],
-        "Year": [str(year) for year in range(2022, 2022 + num_phases)],
+        "Year": years,
         "CPI": cpis,
         f"{material_type.capitalize()} Price (USD)": material_prices
     }
@@ -57,12 +67,10 @@ def app():
     # Gather other inputs for the material requirements and reuse factors
     material_requirement = [st.number_input(f"Enter initial quantity of {material_type} for Phase 1 (tons)", min_value=1, value=1000)]
     reuse_factors = [st.number_input(f"Phase 1 - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0)]
-    years = [2022]
 
     for i in range(1, num_phases):
         material_requirement.append(st.number_input(f"Phase {i+1} - Material Requirement (tons)", min_value=1, value=1000))
         reuse_factors.append(st.number_input(f"Phase {i+1} - Reuse Factor (%)", min_value=0.0, max_value=100.0, value=75.0))
-        years.append(st.number_input(f"Phase {i+1} - Year", min_value=1900, max_value=2025, value=2022))
 
     # Start the calculation and display results
     if st.button("Start Calculation"):
